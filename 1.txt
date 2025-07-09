@@ -1,0 +1,113 @@
+Running with gitlab-runner 18.2.0~pre.66.g900e3121 (900e3121)
+  on terraform-runner Ii36XUm-j, system ID: r_GsQteVIEDWsi
+Preparing the "docker" executor
+00:04
+Using Docker executor with image alpine/terragrunt:1.12.2 ...
+Using helper image:  gitlab/gitlab-runner-helper:x86_64-bleeding  (overridden, default would be  registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v18.2.0 )
+Using effective pull policy of [if-not-present] for container gitlab/gitlab-runner-helper:x86_64-bleeding
+Using locally found image version due to "if-not-present" pull policy
+Using docker image sha256:4c9f2170e0f3acf11e6262b99fca0e4915b4d94772cee05930c7c5a1d78a9fad for gitlab/gitlab-runner-helper:x86_64-bleeding ...
+Using helper image:  gitlab/gitlab-runner-helper:x86_64-bleeding  (overridden, default would be  registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v18.2.0 )
+Using effective pull policy of [if-not-present] for container gitlab/gitlab-runner-helper:x86_64-bleeding
+Using docker image sha256:4c9f2170e0f3acf11e6262b99fca0e4915b4d94772cee05930c7c5a1d78a9fad for gitlab/gitlab-runner-helper:x86_64-bleeding ...
+Using effective pull policy of [if-not-present] for container alpine/terragrunt:1.12.2
+Using locally found image version due to "if-not-present" pull policy
+Using docker image sha256:257cd33fcf97460155c819deec5117c67941bad56731b677716cacbae7dfdc50 for alpine/terragrunt:1.12.2 ...
+Preparing environment
+00:01
+Using helper image:  gitlab/gitlab-runner-helper:x86_64-bleeding  (overridden, default would be  registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v18.2.0 )
+Using effective pull policy of [if-not-present] for container gitlab/gitlab-runner-helper:x86_64-bleeding
+Using docker image sha256:4c9f2170e0f3acf11e6262b99fca0e4915b4d94772cee05930c7c5a1d78a9fad for gitlab/gitlab-runner-helper:x86_64-bleeding ...
+Using effective pull policy of [if-not-present] for container sha256:4c9f2170e0f3acf11e6262b99fca0e4915b4d94772cee05930c7c5a1d78a9fad
+Running on runner-ii36xum-j-project-1-concurrent-0 via e23633bbc940...
+Getting source from Git repository
+00:01
+Gitaly correlation ID: 01JZRCT14X2Q0VZGZR3491SZA2
+Fetching changes with git depth set to 20...
+Reinitialized existing Git repository in /builds/root/terraform/.git/
+Created fresh repository.
+Checking out 7273a106 as detached HEAD (ref is main)...
+Removing terraform-plugins/
+Skipping Git submodules setup
+Executing "step_script" stage of the job script
+00:06
+Using effective pull policy of [if-not-present] for container alpine/terragrunt:1.12.2
+Using docker image sha256:257cd33fcf97460155c819deec5117c67941bad56731b677716cacbae7dfdc50 for alpine/terragrunt:1.12.2 ...
+$ export VSPHERE_PASSWORD=$(echo "$VSPHERE_PASSWORD_BASE64" | base64 -d)
+$ cp $CI_PROJECT_DIR/.terraformrc ~/.terraformrc
+$ cp .terraformrc ~/.terraformrc
+$ export TF_CLI_CONFIG_FILE=~/.terraformrc
+$ mkdir -p terraform-plugins
+$ unzip terraform-plugins.zip
+Archive:  terraform-plugins.zip
+   creating: terraform-plugins/registry.terraform.io/
+   creating: terraform-plugins/registry.terraform.io/hashicorp/
+   creating: terraform-plugins/registry.terraform.io/hashicorp/vsphere/
+   creating: terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/
+  inflating: terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/terraform-provider-vsphere_v2.12.0
+$ ls -la terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0
+total 32968
+drwxrwxrwx    2 root     root          4096 Jul  9 20:07 .
+drwxrwxrwx    3 root     root          4096 Jul  9 20:07 ..
+-rw-r--r--    1 root     root      33747096 Jul  9 20:07 terraform-provider-vsphere_v2.12.0
+$ chmod +x terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/terraform-provider-vsphere_v2.12.0
+$ echo "Список файлов в проекте"
+Список файлов в проекте
+$ ls -la
+total 9596
+drwxrwxrwx    4 root     root          4096 Jul  9 20:07 .
+drwxrwxrwx    4 root     root          4096 Jul  8 13:04 ..
+drwxrwxrwx    6 root     root          4096 Jul  9 20:07 .git
+-rw-rw-rw-    1 root     root          1555 Jul  9 20:07 .gitlab-ci.yml
+-rw-rw-rw-    1 root     root           179 Jul  9 19:29 .terraformrc
+-rw-rw-rw-    1 root     root          6147 Jul  8 13:04 README.md
+-rw-rw-rw-    1 root     root          1575 Jul  8 15:26 main.tf
+-rw-rw-rw-    1 root     root           290 Jul  9 15:26 provider.tf
+drwxr-xr-x    3 root     root          4096 Jul  9 20:07 terraform-plugins
+-rw-rw-rw-    1 root     root       9773771 Jul  9 15:05 terraform-plugins.zip
+-rw-rw-rw-    1 root     root           276 Jul  8 13:04 tfvars
+-rw-rw-rw-    1 root     root           397 Jul  8 14:06 variables.tf
+$ echo "Проверяем наличие .terraformrc:"
+Проверяем наличие .terraformrc:
+$ ls -la $CI_PROJECT_DIR/.terraformrc
+-rw-rw-rw-    1 root     root           179 Jul  9 19:29 /builds/root/terraform/.terraformrc
+$ echo "Содержимое .terraformrc:"
+Содержимое .terraformrc:
+$ cat $CI_PROJECT_DIR/.terraformrc
+provider_installation {
+  filesystem_mirror {
+    path = "./terraform-plugins"
+    include = ["hashicorp/vsphere"]
+  }
+  direct {
+    exclude = ["hashicorp/vsphere"]
+  }
+}$ cp $CI_PROJECT_DIR/.terraformrc ~/.terraformrc
+$ terraform version
+Terraform v1.12.2
+on linux_amd64
+$ chmod +x terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/terraform-provider-vsphere_v2.12.0
+$ echo "Содержимое каталога"
+Содержимое каталога
+$ ls -la terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0
+total 32968
+drwxrwxrwx    2 root     root          4096 Jul  9 20:07 .
+drwxrwxrwx    3 root     root          4096 Jul  9 20:07 ..
+-rwxr-xr-x    1 root     root      33747096 Jul  9 20:07 terraform-provider-vsphere_v2.12.0
+$ echo "Иницилизация"
+Иницилизация
+$ terraform init -backend=false
+Initializing provider plugins...
+- Finding hashicorp/vsphere versions matching "2.12.0"...
+╷
+│ Error: Failed to query available provider packages
+│ 
+│ Could not retrieve the list of available versions for provider
+│ hashicorp/vsphere: provider registry.terraform.io/hashicorp/vsphere was not
+│ found in any of the search locations
+│ 
+│   - ./terraform-plugins
+╵
+Cleaning up project directory and file based variables
+00:01
+ERROR: Job failed: exit code 1

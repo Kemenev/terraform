@@ -1,0 +1,48 @@
+image: alpine/terragrunt:1.12.2
+
+stages:
+  - validate
+  - plan
+
+before_script:
+  - export VSPHERE_PASSWORD=$(echo "$VSPHERE_PASSWORD_BASE64" | base64 -d)
+  - cp $CI_PROJECT_DIR/.terraformrc ~/.terraformrc
+  - cp .terraformrc ~/.terraformrc
+  - export TF_CLI_CONFIG_FILE=~/.terraformrc
+  - mkdir -p terraform-plugins
+  - unzip terraform-plugins.zip
+  - ls -la terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0
+  - chmod +x terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/terraform-provider-vsphere_v2.12.0
+  
+validate:
+  stage: validate
+  tags:
+    - docker
+  script:
+    - echo "Список файлов в проекте"
+    - ls -la
+    - echo "Проверяем наличие .terraformrc:"
+    - ls -la $CI_PROJECT_DIR/.terraformrc
+    - echo "Содержимое .terraformrc:"
+    - cat $CI_PROJECT_DIR/.terraformrc
+    - cp $CI_PROJECT_DIR/.terraformrc ~/.terraformrc
+    - terraform version
+    - chmod +x terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/terraform-provider-vsphere_v2.12.0
+    - echo "Содержимое каталога"
+    - ls -la terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0
+    - echo "Иницилизация"
+    - terraform init -backend=false
+    - terraform validate
+
+plan:
+  stage: plan
+  tags:
+    - docker
+  script:
+    - unzip terraform-plugins.zip
+    - chmod -R +x terraform-plugins
+    - terraform init -backend=false
+    - terraform plan -out=tfplan
+  artifacts:
+    paths:
+      - tfplan
