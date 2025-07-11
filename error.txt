@@ -1,0 +1,92 @@
+ Error: Terraform encountered problems during initialisation, including problems
+│ with the configuration, described below.
+│ 
+│ The Terraform configuration must be valid before initialization so that
+│ Terraform can determine which modules and providers need to be installed.
+│ 
+│ 
+╵
+╷
+│ Error: Unclosed configuration block
+│ 
+│   on variables.tf line 1, in variable "datacenter":
+│    1: variable "datacenter" {
+│ 
+│ There is no closing brace for this block before the end of the file. This
+│ may be caused by incorrect brace nesting elsewhere in this file.
+╵
+╷
+│ Error: Unsupported block type
+│ 
+│   on variables.tf line 4, in variable "datacenter":
+│    4: variable "vsphere_user" {
+│ 
+│ Blocks of type "variable" are not expected here.
+╵
+╷
+│ Error: Unsupported block type
+│ 
+│   on variables.tf line 8, in variable "datacenter":
+│    8: variable "vsphere_password" {
+│ 
+│ Blocks of type "variable" are not expected here.
+╵
+╷
+│ Error: Unsupported block type
+│ 
+│   on variables.tf line 12, in variable "datacenter":
+│   12: variable "vsphere_server" {
+│ 
+│ Blocks of type "variable" are not expected here.
+╵
+╷
+│ Error: Unsupported block type
+│ 
+│   on variables.tf line 16, in variable "datacenter":
+│   16: variable "datastore" {}
+│ 
+│ Blocks of type "variable" are not expected here.
+╵
+╷
+│ Error: Unsupported block type
+│ 
+│   on variables.tf line 17, in variable "datacenter":
+│   17: variable "network" {}
+│ 
+│ Blocks of type "variable" are not expected here.
+╵
+╷
+│ Error: Unsupported block type
+│ 
+│   on variables.tf line 18, in variable "datacenter":
+│   18: variable "template" {}
+│ 
+│ Blocks of type "variable" are not expected here.
+╵
+╷
+│ Error: Unsupported block type
+│ 
+│   on variables.tf line 19, in variable "datacenter":
+│   19: variable "vm_name" {}
+│ 
+│ Blocks of type "variable" are not expected here.
+╵
+╷
+│ Error: Unsupported block type
+│ 
+│   on variables.tf line 20, in variable "datacenter":
+│   20: variable "ipv4_address" {}
+│ 
+│ Blocks of type "variable" are not expected here.
+╵
+╷
+│ Error: Unsupported block type
+│ 
+│   on variables.tf line 21, in variable "datacenter":
+│   21: variable "gateway" {}
+│ 
+│ Blocks of type "variable" are not expected here.
+╵
+Cleaning up project directory and file based variables
+00:02
+ERROR: Job failed: exit code 1
