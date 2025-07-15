@@ -3,34 +3,24 @@ image: alpine/terragrunt:1.12.2
 stages:
   - validate
   - plan
+  - apply
 
 before_script:
-  - export VSPHERE_PASSWORD=$(echo "$VSPHERE_PASSWORD_BASE64" | base64 -d)
-  - cp $CI_PROJECT_DIR/.terraformrc ~/.terraformrc
-  - cp .terraformrc ~/.terraformrc
-  - export TF_CLI_CONFIG_FILE=~/.terraformrc
-  - mkdir -p terraform-plugins
-  - unzip terraform-plugins.zip
+  - unzip -o terraform-plugins.zip
+  - export TF_VAR_vsphere_password=$(echo "$TF_VAR_vsphere_password" | base64 -d)
+  - echo "$TF_VAR_vsphere_password"
+  - mkdir -p ~/.terraform.d/plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/linux_amd64
+  - cp terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/terraform-provider-vsphere_v2.12.0 ~/.terraform.d/plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/linux_amd64
   - ls -la terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0
-  - chmod +x terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/terraform-provider-vsphere_v2.12.0
+  - chmod +x ~/.terraform.d/plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/linux_amd64/terraform-provider-vsphere_v2.12.0
+  - echo "$TF_VAR_vsphere_user"
+  - echo "$TF_VAR_vsphere_server"
   
 validate:
   stage: validate
   tags:
     - docker
   script:
-    - echo "Список файлов в проекте"
-    - ls -la
-    - echo "Проверяем наличие .terraformrc:"
-    - ls -la $CI_PROJECT_DIR/.terraformrc
-    - echo "Содержимое .terraformrc:"
-    - cat $CI_PROJECT_DIR/.terraformrc
-    - cp $CI_PROJECT_DIR/.terraformrc ~/.terraformrc
-    - terraform version
-    - chmod +x terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0/terraform-provider-vsphere_v2.12.0
-    - echo "Содержимое каталога"
-    - ls -la terraform-plugins/registry.terraform.io/hashicorp/vsphere/2.12.0
-    - echo "Иницилизация"
     - terraform init -backend=false
     - terraform validate
 
@@ -39,10 +29,19 @@ plan:
   tags:
     - docker
   script:
-    - unzip terraform-plugins.zip
+    - unzip -o terraform-plugins.zip
     - chmod -R +x terraform-plugins
     - terraform init -backend=false
-    - terraform plan -out=tfplan
+    - terraform plan -var-file=terraform.tfvars -out=tfplan
   artifacts:
     paths:
       - tfplan
+      - .terraform.lock.hcl
+apply:
+  stage: apply
+  tags:
+    - docker
+  script:
+    - terraform apply "tfplan"
+  when: manual
+  allow_failure: false
